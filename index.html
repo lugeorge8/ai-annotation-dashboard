@@ -1,0 +1,1031 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>AI Annotation Dashboard</title>
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+    <style>
+      :root {
+        --bg: #f5f7fa;
+        --surface: #ffffff;
+        --surface-2: #eef3f7;
+        --ink: #17202a;
+        --muted: #627083;
+        --line: #d9e1ea;
+        --blue: #246bfe;
+        --blue-soft: #dce7ff;
+        --green: #158466;
+        --green-soft: #dff4ed;
+        --orange: #c16a14;
+        --orange-soft: #fff0db;
+        --red: #c93535;
+        --red-soft: #ffe2e2;
+        --purple: #6750a4;
+        --shadow: 0 14px 36px rgba(24, 35, 52, 0.08);
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        font-family:
+          Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+          sans-serif;
+        background: var(--bg);
+        color: var(--ink);
+      }
+
+      button,
+      input,
+      select,
+      textarea {
+        font: inherit;
+      }
+
+      button {
+        border: 0;
+        cursor: pointer;
+      }
+
+      .app {
+        min-height: 100vh;
+        display: grid;
+        grid-template-columns: 252px 1fr;
+      }
+
+      .sidebar {
+        background: #111820;
+        color: #f7fafc;
+        padding: 20px 16px;
+        display: flex;
+        flex-direction: column;
+        gap: 22px;
+      }
+
+      .brand {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 6px 6px 14px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+      }
+
+      .brand-mark {
+        width: 38px;
+        height: 38px;
+        border-radius: 8px;
+        display: grid;
+        place-items: center;
+        background: #38bdf8;
+        color: #0b1117;
+        font-weight: 800;
+      }
+
+      .brand strong {
+        display: block;
+        font-size: 15px;
+      }
+
+      .brand span {
+        display: block;
+        color: #aab7c6;
+        font-size: 12px;
+        margin-top: 2px;
+      }
+
+      .nav {
+        display: grid;
+        gap: 4px;
+      }
+
+      .nav button {
+        min-height: 42px;
+        border-radius: 7px;
+        background: transparent;
+        color: #c8d3df;
+        display: grid;
+        grid-template-columns: 20px 1fr auto;
+        align-items: center;
+        gap: 10px;
+        padding: 0 10px;
+        text-align: left;
+      }
+
+      .nav button.active,
+      .nav button:hover {
+        background: rgba(255, 255, 255, 0.09);
+        color: #ffffff;
+      }
+
+      .count {
+        min-width: 22px;
+        height: 22px;
+        border-radius: 999px;
+        display: grid;
+        place-items: center;
+        background: rgba(255, 255, 255, 0.12);
+        color: #d7e2ee;
+        font-size: 12px;
+      }
+
+      .sidebar-footer {
+        margin-top: auto;
+        padding: 12px;
+        border-radius: 8px;
+        background: rgba(255, 255, 255, 0.08);
+        color: #cbd6e2;
+        font-size: 13px;
+        line-height: 1.4;
+      }
+
+      .main {
+        min-width: 0;
+        display: flex;
+        flex-direction: column;
+      }
+
+      .topbar {
+        min-height: 74px;
+        padding: 14px 24px;
+        background: rgba(255, 255, 255, 0.82);
+        border-bottom: 1px solid var(--line);
+        backdrop-filter: blur(14px);
+        display: flex;
+        justify-content: space-between;
+        gap: 16px;
+        position: sticky;
+        top: 0;
+        z-index: 4;
+      }
+
+      .title h1 {
+        margin: 0;
+        font-size: 24px;
+        line-height: 1.25;
+      }
+
+      .title p {
+        margin: 4px 0 0;
+        color: var(--muted);
+        font-size: 14px;
+      }
+
+      .actions {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        flex-wrap: wrap;
+        justify-content: flex-end;
+      }
+
+      .icon-btn,
+      .primary-btn,
+      .ghost-btn {
+        min-height: 38px;
+        border-radius: 7px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        padding: 0 13px;
+      }
+
+      .icon-btn {
+        width: 38px;
+        padding: 0;
+        background: var(--surface-2);
+        color: var(--ink);
+      }
+
+      .primary-btn {
+        background: var(--blue);
+        color: #ffffff;
+        font-weight: 700;
+      }
+
+      .ghost-btn {
+        background: var(--surface);
+        color: var(--ink);
+        border: 1px solid var(--line);
+      }
+
+      .content {
+        padding: 22px 24px 30px;
+        display: grid;
+        gap: 20px;
+      }
+
+      .metrics {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 14px;
+      }
+
+      .metric {
+        background: var(--surface);
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        padding: 16px;
+        box-shadow: var(--shadow);
+        min-height: 116px;
+      }
+
+      .metric .label {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 8px;
+        color: var(--muted);
+        font-size: 13px;
+      }
+
+      .metric strong {
+        display: block;
+        margin-top: 12px;
+        font-size: 30px;
+      }
+
+      .metric span:last-child {
+        display: block;
+        margin-top: 8px;
+        color: var(--green);
+        font-size: 13px;
+      }
+
+      .grid {
+        display: grid;
+        grid-template-columns: minmax(0, 1.45fr) minmax(340px, 0.9fr);
+        gap: 18px;
+        align-items: start;
+      }
+
+      .panel {
+        background: var(--surface);
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        box-shadow: var(--shadow);
+        overflow: hidden;
+      }
+
+      .panel-head {
+        min-height: 56px;
+        padding: 14px 16px;
+        border-bottom: 1px solid var(--line);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+      }
+
+      .panel-head h2 {
+        margin: 0;
+        font-size: 16px;
+      }
+
+      .panel-head p {
+        margin: 3px 0 0;
+        color: var(--muted);
+        font-size: 13px;
+      }
+
+      .segmented {
+        padding: 3px;
+        background: var(--surface-2);
+        border-radius: 8px;
+        display: flex;
+      }
+
+      .segmented button {
+        min-height: 30px;
+        border-radius: 6px;
+        background: transparent;
+        color: var(--muted);
+        padding: 0 10px;
+      }
+
+      .segmented button.active {
+        background: #ffffff;
+        color: var(--ink);
+        box-shadow: 0 3px 10px rgba(33, 42, 55, 0.1);
+      }
+
+      .review-list {
+        display: grid;
+      }
+
+      .review-row {
+        display: grid;
+        grid-template-columns: 1fr 124px 112px 92px;
+        gap: 12px;
+        align-items: center;
+        min-height: 74px;
+        padding: 12px 16px;
+        border-bottom: 1px solid var(--line);
+      }
+
+      .review-row:last-child {
+        border-bottom: 0;
+      }
+
+      .item-title {
+        font-weight: 750;
+        margin-bottom: 4px;
+      }
+
+      .item-meta {
+        color: var(--muted);
+        font-size: 13px;
+      }
+
+      .badge {
+        min-height: 26px;
+        border-radius: 999px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0 10px;
+        font-size: 12px;
+        font-weight: 750;
+        white-space: nowrap;
+      }
+
+      .badge.orange {
+        color: var(--orange);
+        background: var(--orange-soft);
+      }
+
+      .badge.green {
+        color: var(--green);
+        background: var(--green-soft);
+      }
+
+      .badge.red {
+        color: var(--red);
+        background: var(--red-soft);
+      }
+
+      .badge.blue {
+        color: #2158ce;
+        background: var(--blue-soft);
+      }
+
+      .progress {
+        height: 8px;
+        background: #e7edf3;
+        border-radius: 999px;
+        overflow: hidden;
+      }
+
+      .progress span {
+        display: block;
+        height: 100%;
+        background: var(--blue);
+        border-radius: inherit;
+      }
+
+      .annotation-shell {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) 270px;
+        min-height: 420px;
+      }
+
+      .document {
+        padding: 18px;
+        background:
+          linear-gradient(90deg, rgba(36, 107, 254, 0.08) 0 1px, transparent 1px 100%),
+          linear-gradient(rgba(36, 107, 254, 0.08) 0 1px, transparent 1px 100%);
+        background-size: 28px 28px;
+      }
+
+      .sample-text {
+        max-width: 820px;
+        margin: 0 auto;
+        background: #ffffff;
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        padding: 18px;
+        line-height: 1.7;
+      }
+
+      mark {
+        border-radius: 5px;
+        padding: 2px 4px;
+      }
+
+      .entity-person {
+        background: #ffe8a3;
+      }
+
+      .entity-org {
+        background: #cce7ff;
+      }
+
+      .entity-risk {
+        background: #ffd2d2;
+      }
+
+      .annotation-side {
+        border-left: 1px solid var(--line);
+        padding: 14px;
+        display: grid;
+        gap: 14px;
+        align-content: start;
+      }
+
+      .field {
+        display: grid;
+        gap: 6px;
+      }
+
+      label {
+        color: var(--muted);
+        font-size: 12px;
+        font-weight: 750;
+        text-transform: uppercase;
+      }
+
+      select,
+      input,
+      textarea {
+        width: 100%;
+        min-height: 38px;
+        border: 1px solid var(--line);
+        border-radius: 7px;
+        background: #ffffff;
+        color: var(--ink);
+        padding: 8px 10px;
+      }
+
+      textarea {
+        min-height: 86px;
+        resize: vertical;
+      }
+
+      .labels {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+      }
+
+      .label-chip {
+        border-radius: 999px;
+        border: 1px solid var(--line);
+        background: #ffffff;
+        min-height: 30px;
+        padding: 0 10px;
+        display: inline-flex;
+        align-items: center;
+        gap: 7px;
+        font-size: 13px;
+      }
+
+      .dot {
+        width: 10px;
+        height: 10px;
+        border-radius: 999px;
+        background: var(--blue);
+      }
+
+      .workflow {
+        display: grid;
+        grid-template-columns: repeat(5, minmax(0, 1fr));
+        gap: 10px;
+        padding: 16px;
+      }
+
+      .step {
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        padding: 12px;
+        min-height: 112px;
+        display: grid;
+        align-content: space-between;
+        gap: 12px;
+      }
+
+      .step svg {
+        color: var(--blue);
+      }
+
+      .step strong {
+        display: block;
+        font-size: 14px;
+      }
+
+      .step span {
+        color: var(--muted);
+        font-size: 12px;
+      }
+
+      .quality {
+        padding: 16px;
+        display: grid;
+        gap: 14px;
+      }
+
+      .compare {
+        display: grid;
+        gap: 10px;
+      }
+
+      .compare-row {
+        display: grid;
+        grid-template-columns: 96px 1fr 46px;
+        gap: 10px;
+        align-items: center;
+        font-size: 13px;
+      }
+
+      .log-list {
+        display: grid;
+        gap: 10px;
+      }
+
+      .log {
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        padding: 10px;
+        display: grid;
+        gap: 4px;
+      }
+
+      .log strong {
+        font-size: 13px;
+      }
+
+      .log span {
+        color: var(--muted);
+        font-size: 12px;
+      }
+
+      .upload-box {
+        margin: 16px;
+        border: 1px dashed #9fb0c3;
+        border-radius: 8px;
+        background: #fbfdff;
+        min-height: 138px;
+        display: grid;
+        place-items: center;
+        text-align: center;
+        padding: 18px;
+      }
+
+      .upload-box strong {
+        display: block;
+        margin-top: 8px;
+      }
+
+      .upload-box span {
+        color: var(--muted);
+        display: block;
+        margin-top: 4px;
+        font-size: 13px;
+      }
+
+      .table {
+        display: grid;
+        border-top: 1px solid var(--line);
+      }
+
+      .table-row {
+        display: grid;
+        grid-template-columns: 1fr 110px 110px;
+        min-height: 44px;
+        align-items: center;
+        border-bottom: 1px solid var(--line);
+      }
+
+      .table-row > * {
+        padding: 0 14px;
+        min-width: 0;
+      }
+
+      .table-row.head {
+        background: #f8fafc;
+        color: var(--muted);
+        font-size: 12px;
+        font-weight: 800;
+        text-transform: uppercase;
+      }
+
+      @media (max-width: 1080px) {
+        .app {
+          grid-template-columns: 1fr;
+        }
+
+        .sidebar {
+          position: static;
+          padding: 12px;
+        }
+
+        .brand,
+        .sidebar-footer {
+          display: none;
+        }
+
+        .nav {
+          grid-template-columns: repeat(4, minmax(0, 1fr));
+        }
+
+        .nav button {
+          grid-template-columns: 20px 1fr;
+        }
+
+        .nav .count {
+          display: none;
+        }
+
+        .metrics,
+        .workflow {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+
+        .grid,
+        .annotation-shell {
+          grid-template-columns: 1fr;
+        }
+
+        .annotation-side {
+          border-left: 0;
+          border-top: 1px solid var(--line);
+        }
+      }
+
+      @media (max-width: 680px) {
+        .topbar {
+          position: static;
+          flex-direction: column;
+          padding: 16px;
+        }
+
+        .content {
+          padding: 14px;
+        }
+
+        .nav {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+
+        .metrics,
+        .workflow {
+          grid-template-columns: 1fr;
+        }
+
+        .review-row {
+          grid-template-columns: 1fr;
+          gap: 8px;
+        }
+
+        .table-row {
+          grid-template-columns: 1fr;
+          padding: 10px 0;
+          gap: 6px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="app">
+      <aside class="sidebar" aria-label="Dashboard navigation">
+        <div class="brand">
+          <div class="brand-mark">AI</div>
+          <div>
+            <strong>AnnotateOps</strong>
+            <span>Reviewer console</span>
+          </div>
+        </div>
+
+        <nav class="nav">
+          <button class="active" type="button">
+            <i data-lucide="layout-dashboard"></i>
+            Dashboard
+            <span class="count">12</span>
+          </button>
+          <button type="button">
+            <i data-lucide="file-up"></i>
+            Datasets
+            <span class="count">4</span>
+          </button>
+          <button type="button">
+            <i data-lucide="tags"></i>
+            Labels
+            <span class="count">18</span>
+          </button>
+          <button type="button">
+            <i data-lucide="mouse-pointer-square"></i>
+            Annotate
+            <span class="count">86</span>
+          </button>
+          <button type="button">
+            <i data-lucide="users"></i>
+            Reviewers
+            <span class="count">7</span>
+          </button>
+          <button type="button">
+            <i data-lucide="download"></i>
+            Exports
+            <span class="count">3</span>
+          </button>
+        </nav>
+
+        <div class="sidebar-footer">
+          Current project: legal entity extraction. Review threshold is set to 2 of 3 consensus.
+        </div>
+      </aside>
+
+      <main class="main">
+        <header class="topbar">
+          <div class="title">
+            <h1>AI Annotation Dashboard</h1>
+            <p>Dataset intake, labeling, reviewer QA, consensus, corrections, and export in one workspace.</p>
+          </div>
+          <div class="actions">
+            <button class="icon-btn" type="button" title="Search"><i data-lucide="search"></i></button>
+            <button class="ghost-btn" type="button"><i data-lucide="filter"></i> Filters</button>
+            <button class="ghost-btn" type="button"><i data-lucide="download"></i> Export</button>
+            <button class="primary-btn" type="button"><i data-lucide="plus"></i> New Batch</button>
+          </div>
+        </header>
+
+        <section class="content">
+          <div class="metrics" aria-label="Project metrics">
+            <article class="metric">
+              <div class="label">
+                <span>Pending Reviews</span>
+                <i data-lucide="clock-3"></i>
+              </div>
+              <strong>128</strong>
+              <span>24 due today</span>
+            </article>
+            <article class="metric">
+              <div class="label">
+                <span>Consensus Score</span>
+                <i data-lucide="badge-check"></i>
+              </div>
+              <strong>91%</strong>
+              <span>+4% this week</span>
+            </article>
+            <article class="metric">
+              <div class="label">
+                <span>Correction Rate</span>
+                <i data-lucide="triangle-alert"></i>
+              </div>
+              <strong>6.8%</strong>
+              <span style="color: var(--orange)">Needs label review</span>
+            </article>
+            <article class="metric">
+              <div class="label">
+                <span>Export Ready</span>
+                <i data-lucide="package-check"></i>
+              </div>
+              <strong>3,420</strong>
+              <span>JSONL and CSV available</span>
+            </article>
+          </div>
+
+          <div class="grid">
+            <section class="panel">
+              <div class="panel-head">
+                <div>
+                  <h2>For Reviewers</h2>
+                  <p>Dashboard view for pending reviews, quality comparison, errors, consensus, and corrections.</p>
+                </div>
+                <div class="segmented" aria-label="Review queue tabs">
+                  <button class="active" type="button">Queue</button>
+                  <button type="button">QA</button>
+                  <button type="button">Logs</button>
+                </div>
+              </div>
+
+              <div class="review-list">
+                <div class="review-row">
+                  <div>
+                    <div class="item-title">Batch 24-A: contract parties</div>
+                    <div class="item-meta">42 records · assigned to Maya · due 3:00 PM</div>
+                  </div>
+                  <span class="badge orange">Review</span>
+                  <div class="progress" aria-label="72 percent complete"><span style="width: 72%"></span></div>
+                  <button class="ghost-btn" type="button">Open</button>
+                </div>
+                <div class="review-row">
+                  <div>
+                    <div class="item-title">Batch 24-B: adverse clauses</div>
+                    <div class="item-meta">31 records · assigned to Leon · 5 conflicts</div>
+                  </div>
+                  <span class="badge red">Conflict</span>
+                  <div class="progress" aria-label="44 percent complete"><span style="width: 44%"></span></div>
+                  <button class="ghost-btn" type="button">Open</button>
+                </div>
+                <div class="review-row">
+                  <div>
+                    <div class="item-title">Batch 23-F: organization names</div>
+                    <div class="item-meta">86 records · consensus pass · ready for export</div>
+                  </div>
+                  <span class="badge green">Approved</span>
+                  <div class="progress" aria-label="100 percent complete"><span style="width: 100%"></span></div>
+                  <button class="ghost-btn" type="button">Open</button>
+                </div>
+              </div>
+            </section>
+
+            <section class="panel">
+              <div class="panel-head">
+                <div>
+                  <h2>Quality Comparison</h2>
+                  <p>Annotator agreement and reviewer corrections.</p>
+                </div>
+                <span class="badge blue">Live</span>
+              </div>
+              <div class="quality">
+                <div class="compare">
+                  <div class="compare-row">
+                    <span>Maya</span>
+                    <div class="progress"><span style="width: 94%"></span></div>
+                    <strong>94%</strong>
+                  </div>
+                  <div class="compare-row">
+                    <span>Leon</span>
+                    <div class="progress"><span style="width: 88%"></span></div>
+                    <strong>88%</strong>
+                  </div>
+                  <div class="compare-row">
+                    <span>Nia</span>
+                    <div class="progress"><span style="width: 83%"></span></div>
+                    <strong>83%</strong>
+                  </div>
+                </div>
+                <div class="log-list">
+                  <div class="log">
+                    <strong>Error tracking</strong>
+                    <span>Most common issue: overlapping organization spans.</span>
+                  </div>
+                  <div class="log">
+                    <strong>Rejection / correction log</strong>
+                    <span>18 corrections, 4 rejected records, 2 label-definition changes.</span>
+                  </div>
+                </div>
+              </div>
+            </section>
+          </div>
+
+          <section class="panel">
+            <div class="panel-head">
+              <div>
+                <h2>Annotation Interface</h2>
+                <p>Core workspace for applying labels, comments, reviewer decisions, and consensus outcomes.</p>
+              </div>
+              <div class="actions">
+                <button class="ghost-btn" type="button"><i data-lucide="undo-2"></i> Undo</button>
+                <button class="primary-btn" type="button"><i data-lucide="check"></i> Submit</button>
+              </div>
+            </div>
+            <div class="annotation-shell">
+              <div class="document">
+                <div class="sample-text">
+                  <p>
+                    <mark class="entity-person">Jordan Kim</mark> signed the services agreement on behalf of
+                    <mark class="entity-org">Northstar Analytics LLC</mark>. The reviewer flagged a
+                    <mark class="entity-risk">missing limitation of liability clause</mark> for correction before export.
+                  </p>
+                  <p>
+                    Consensus requires two reviewers to agree on each span. Disagreements move into the pending review queue
+                    with the original labels preserved for audit.
+                  </p>
+                </div>
+              </div>
+              <aside class="annotation-side">
+                <div class="field">
+                  <label for="labelType">Label Configuration</label>
+                  <select id="labelType">
+                    <option>Person</option>
+                    <option>Organization</option>
+                    <option>Risk Clause</option>
+                    <option>Date</option>
+                  </select>
+                </div>
+                <div class="labels" aria-label="Available labels">
+                  <span class="label-chip"><span class="dot" style="background:#f4b942"></span> Person</span>
+                  <span class="label-chip"><span class="dot" style="background:#4aa3ff"></span> Organization</span>
+                  <span class="label-chip"><span class="dot" style="background:#ff6f6f"></span> Risk</span>
+                  <span class="label-chip"><span class="dot" style="background:#158466"></span> Date</span>
+                </div>
+                <div class="field">
+                  <label for="decision">Review Workflow</label>
+                  <select id="decision">
+                    <option>Approve annotation</option>
+                    <option>Request correction</option>
+                    <option>Reject record</option>
+                    <option>Escalate conflict</option>
+                  </select>
+                </div>
+                <div class="field">
+                  <label for="notes">Correction Notes</label>
+                  <textarea id="notes">Clarify whether Northstar Analytics LLC is the contracting entity or a referenced party.</textarea>
+                </div>
+              </aside>
+            </div>
+          </section>
+
+          <div class="grid">
+            <section class="panel">
+              <div class="panel-head">
+                <div>
+                  <h2>Essential MVP Features</h2>
+                  <p>Upload, configure, annotate, review, export, and monitor progress.</p>
+                </div>
+              </div>
+              <div class="workflow">
+                <div class="step">
+                  <i data-lucide="file-up"></i>
+                  <div>
+                    <strong>Dataset Upload</strong>
+                    <span>Import CSV, JSONL, image, text, or PDF batches.</span>
+                  </div>
+                </div>
+                <div class="step">
+                  <i data-lucide="tags"></i>
+                  <div>
+                    <strong>Label Configuration</strong>
+                    <span>Define labels, colors, rules, and examples.</span>
+                  </div>
+                </div>
+                <div class="step">
+                  <i data-lucide="mouse-pointer-square"></i>
+                  <div>
+                    <strong>Annotation Interface</strong>
+                    <span>Apply spans, classes, notes, and flags.</span>
+                  </div>
+                </div>
+                <div class="step">
+                  <i data-lucide="users"></i>
+                  <div>
+                    <strong>User Management</strong>
+                    <span>Assign work by role, reviewer, and deadline.</span>
+                  </div>
+                </div>
+                <div class="step">
+                  <i data-lucide="bar-chart-3"></i>
+                  <div>
+                    <strong>Progress Tracking</strong>
+                    <span>Monitor throughput, blockers, and readiness.</span>
+                  </div>
+                </div>
+              </div>
+            </section>
+
+            <section class="panel">
+              <div class="panel-head">
+                <div>
+                  <h2>Dataset Upload</h2>
+                  <p>Ready for data import and export generation.</p>
+                </div>
+              </div>
+              <div class="upload-box">
+                <div>
+                  <i data-lucide="upload-cloud"></i>
+                  <strong>Drop dataset files here</strong>
+                  <span>CSV, JSONL, images, PDFs, or plain text</span>
+                </div>
+              </div>
+              <div class="table">
+                <div class="table-row head">
+                  <span>Export</span>
+                  <span>Status</span>
+                  <span>Records</span>
+                </div>
+                <div class="table-row">
+                  <span>training-set-approved.jsonl</span>
+                  <span><span class="badge green">Ready</span></span>
+                  <span>3,420</span>
+                </div>
+                <div class="table-row">
+                  <span>corrections-audit.csv</span>
+                  <span><span class="badge blue">Queued</span></span>
+                  <span>212</span>
+                </div>
+              </div>
+            </section>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <script>
+      const buttons = document.querySelectorAll(".nav button, .segmented button");
+      buttons.forEach((button) => {
+        button.addEventListener("click", () => {
+          const group = button.parentElement.querySelectorAll("button");
+          group.forEach((item) => item.classList.remove("active"));
+          button.classList.add("active");
+        });
+      });
+
+      if (window.lucide) {
+        window.lucide.createIcons({ attrs: { width: 18, height: 18, "stroke-width": 2 } });
+      }
+    </script>
+  </body>
+</html>
