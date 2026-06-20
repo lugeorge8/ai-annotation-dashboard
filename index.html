@@ -611,6 +611,194 @@
         text-transform: uppercase;
       }
 
+      .role-dashboard {
+        display: grid;
+        gap: 18px;
+      }
+
+      .role-tabs {
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+      }
+
+      .role-tabs button {
+        min-height: 36px;
+        border-radius: 999px;
+        background: var(--surface-2);
+        color: var(--muted);
+        padding: 0 14px;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        font-weight: 750;
+      }
+
+      .role-tabs button.active {
+        background: #17202a;
+        color: #ffffff;
+      }
+
+      .manager-grid {
+        display: grid;
+        grid-template-columns: repeat(5, minmax(0, 1fr));
+        border-top: 1px solid var(--line);
+      }
+
+      .manager-card {
+        min-height: 208px;
+        padding: 16px;
+        border-right: 1px solid var(--line);
+        display: grid;
+        align-content: space-between;
+        gap: 16px;
+      }
+
+      .manager-card:last-child {
+        border-right: 0;
+      }
+
+      .manager-card h3,
+      .review-feature h3 {
+        margin: 0;
+        font-size: 14px;
+      }
+
+      .manager-card p,
+      .review-feature p {
+        margin: 6px 0 0;
+        color: var(--muted);
+        font-size: 12px;
+        line-height: 1.45;
+      }
+
+      .mini-stat {
+        display: grid;
+        gap: 8px;
+      }
+
+      .mini-stat strong {
+        font-size: 28px;
+      }
+
+      .mini-stat span {
+        color: var(--muted);
+        font-size: 12px;
+      }
+
+      .stacked-bars {
+        display: grid;
+        gap: 7px;
+      }
+
+      .bar-line {
+        display: grid;
+        grid-template-columns: 74px 1fr 36px;
+        align-items: center;
+        gap: 8px;
+        color: var(--muted);
+        font-size: 12px;
+      }
+
+      .coverage-map {
+        display: grid;
+        grid-template-columns: repeat(6, 1fr);
+        gap: 5px;
+      }
+
+      .coverage-map span {
+        aspect-ratio: 1;
+        border-radius: 5px;
+        background: var(--green-soft);
+      }
+
+      .coverage-map span.warn {
+        background: var(--orange-soft);
+      }
+
+      .coverage-map span.hot {
+        background: var(--red-soft);
+      }
+
+      .quality-rings {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 8px;
+      }
+
+      .ring {
+        min-height: 58px;
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        display: grid;
+        place-items: center;
+        text-align: center;
+        font-size: 12px;
+        color: var(--muted);
+      }
+
+      .ring strong {
+        display: block;
+        color: var(--ink);
+        font-size: 16px;
+      }
+
+      .status-list {
+        display: grid;
+        gap: 8px;
+      }
+
+      .status-item {
+        display: flex;
+        justify-content: space-between;
+        gap: 8px;
+        align-items: center;
+        color: var(--muted);
+        font-size: 12px;
+      }
+
+      .review-feature-grid {
+        display: grid;
+        grid-template-columns: repeat(5, minmax(0, 1fr));
+        border-top: 1px solid var(--line);
+      }
+
+      .review-feature {
+        min-height: 176px;
+        padding: 16px;
+        border-right: 1px solid var(--line);
+        display: grid;
+        align-content: space-between;
+        gap: 14px;
+      }
+
+      .review-feature:last-child {
+        border-right: 0;
+      }
+
+      .feature-icon {
+        width: 34px;
+        height: 34px;
+        border-radius: 8px;
+        display: grid;
+        place-items: center;
+        background: var(--blue-soft);
+        color: var(--blue);
+      }
+
+      .mini-list {
+        display: grid;
+        gap: 6px;
+        font-size: 12px;
+        color: var(--muted);
+      }
+
+      .mini-list div {
+        display: flex;
+        justify-content: space-between;
+        gap: 10px;
+      }
+
       @media (max-width: 1080px) {
         .app {
           grid-template-columns: 1fr;
@@ -639,8 +827,15 @@
         }
 
         .metrics,
-        .workflow {
+        .workflow,
+        .manager-grid,
+        .review-feature-grid {
           grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+
+        .manager-card,
+        .review-feature {
+          border-bottom: 1px solid var(--line);
         }
 
         .grid,
@@ -670,8 +865,15 @@
         }
 
         .metrics,
-        .workflow {
+        .workflow,
+        .manager-grid,
+        .review-feature-grid {
           grid-template-columns: 1fr;
+        }
+
+        .manager-card,
+        .review-feature {
+          border-right: 0;
         }
 
         .review-row {
@@ -786,11 +988,157 @@
             </article>
           </div>
 
+          <section class="panel role-dashboard">
+            <div class="panel-head">
+              <div>
+                <h2>Role Dashboard Views</h2>
+                <p>Project managers track progress and staffing; reviewers focus on queues, quality, errors, consensus, and corrections.</p>
+              </div>
+              <div class="role-tabs" aria-label="Role views">
+                <button class="active" type="button"><i data-lucide="briefcase-business"></i> Project Managers</button>
+                <button type="button"><i data-lucide="clipboard-check"></i> Reviewers</button>
+              </div>
+            </div>
+
+            <div class="manager-grid" aria-label="Project manager dashboard views">
+              <article class="manager-card">
+                <div>
+                  <h3>Project Progress</h3>
+                  <p>Tracks completed records, blocked batches, due dates, and release readiness.</p>
+                </div>
+                <div class="mini-stat">
+                  <strong>74%</strong>
+                  <div class="progress" aria-label="74 percent complete"><span style="width: 74%"></span></div>
+                  <span>18,420 of 24,900 records complete</span>
+                </div>
+              </article>
+
+              <article class="manager-card">
+                <div>
+                  <h3>Workforce Productivity</h3>
+                  <p>Measures throughput by annotator and reviewer so managers can balance assignments.</p>
+                </div>
+                <div class="stacked-bars">
+                  <div class="bar-line"><span>Maya</span><div class="progress"><span style="width: 92%"></span></div><strong>412</strong></div>
+                  <div class="bar-line"><span>Leon</span><div class="progress"><span style="width: 81%"></span></div><strong>368</strong></div>
+                  <div class="bar-line"><span>Nia</span><div class="progress"><span style="width: 64%"></span></div><strong>291</strong></div>
+                </div>
+              </article>
+
+              <article class="manager-card">
+                <div>
+                  <h3>Dataset Coverage</h3>
+                  <p>Identifies low coverage classes, split imbalance, and records that still need labels.</p>
+                </div>
+                <div class="coverage-map" aria-label="Coverage heatmap">
+                  <span></span><span></span><span class="warn"></span><span></span><span></span><span></span>
+                  <span></span><span class="hot"></span><span class="warn"></span><span></span><span></span><span></span>
+                  <span></span><span></span><span></span><span class="warn"></span><span></span><span></span>
+                </div>
+              </article>
+
+              <article class="manager-card">
+                <div>
+                  <h3>Quality Metrics</h3>
+                  <p>Monitors agreement, correction rate, rejection rate, and label-definition drift.</p>
+                </div>
+                <div class="quality-rings">
+                  <div class="ring"><span><strong>91%</strong> Agree</span></div>
+                  <div class="ring"><span><strong>6.8%</strong> Fix</span></div>
+                  <div class="ring"><span><strong>1.7%</strong> Reject</span></div>
+                </div>
+              </article>
+
+              <article class="manager-card">
+                <div>
+                  <h3>Review Queue Status</h3>
+                  <p>Tracks pending review volume, conflict age, overdue items, and escalation risk.</p>
+                </div>
+                <div class="status-list">
+                  <div class="status-item"><span>Pending</span><span class="badge orange">128</span></div>
+                  <div class="status-item"><span>Conflicts</span><span class="badge red">17</span></div>
+                  <div class="status-item"><span>Ready</span><span class="badge green">3,420</span></div>
+                </div>
+              </article>
+            </div>
+          </section>
+
+          <section class="panel">
+            <div class="panel-head">
+              <div>
+                <h2>Reviewer Dashboard Views</h2>
+                <p>Focused screens for review decisions, comparison checks, error triage, consensus, and audit logs.</p>
+              </div>
+              <span class="badge blue">Reviewer Tools</span>
+            </div>
+            <div class="review-feature-grid" aria-label="Reviewer dashboard views">
+              <article class="review-feature">
+                <span class="feature-icon"><i data-lucide="inbox"></i></span>
+                <div>
+                  <h3>Pending Reviews</h3>
+                  <p>Lists assigned items by due time, priority, reviewer, and conflict status.</p>
+                </div>
+                <div class="mini-list">
+                  <div><span>Due today</span><strong>24</strong></div>
+                  <div><span>Escalated</span><strong>5</strong></div>
+                </div>
+              </article>
+
+              <article class="review-feature">
+                <span class="feature-icon"><i data-lucide="git-compare-arrows"></i></span>
+                <div>
+                  <h3>Quality Comparison</h3>
+                  <p>Compares model output, annotator labels, and reviewer corrections side by side.</p>
+                </div>
+                <div class="mini-list">
+                  <div><span>Model agreement</span><strong>87%</strong></div>
+                  <div><span>Human agreement</span><strong>91%</strong></div>
+                </div>
+              </article>
+
+              <article class="review-feature">
+                <span class="feature-icon"><i data-lucide="bug"></i></span>
+                <div>
+                  <h3>Error Tracking</h3>
+                  <p>Identifies recurring mistakes by label, data source, annotator, and batch.</p>
+                </div>
+                <div class="mini-list">
+                  <div><span>Span overlap</span><strong>42</strong></div>
+                  <div><span>Wrong label</span><strong>31</strong></div>
+                </div>
+              </article>
+
+              <article class="review-feature">
+                <span class="feature-icon"><i data-lucide="badge-check"></i></span>
+                <div>
+                  <h3>Consensus Scores</h3>
+                  <p>Evaluates reviewer agreement before batches can move to approved export.</p>
+                </div>
+                <div class="mini-list">
+                  <div><span>2 of 3 pass</span><strong>86%</strong></div>
+                  <div><span>Needs adjudication</span><strong>17</strong></div>
+                </div>
+              </article>
+
+              <article class="review-feature">
+                <span class="feature-icon"><i data-lucide="file-clock"></i></span>
+                <div>
+                  <h3>Rejection / Correction Logs</h3>
+                  <p>Tracks rejected records, correction notes, reviewer decisions, and audit history.</p>
+                </div>
+                <div class="mini-list">
+                  <div><span>Corrections</span><strong>212</strong></div>
+                  <div><span>Rejected</span><strong>39</strong></div>
+                </div>
+              </article>
+            </div>
+          </section>
+
           <div class="grid">
             <section class="panel">
               <div class="panel-head">
                 <div>
-                  <h2>For Reviewers</h2>
+                  <h2>Reviewer Workbench</h2>
                   <p>Dashboard view for pending reviews, quality comparison, errors, consensus, and corrections.</p>
                 </div>
                 <div class="segmented" aria-label="Review queue tabs">
@@ -1014,7 +1362,7 @@
     </div>
 
     <script>
-      const buttons = document.querySelectorAll(".nav button, .segmented button");
+      const buttons = document.querySelectorAll(".nav button, .segmented button, .role-tabs button");
       buttons.forEach((button) => {
         button.addEventListener("click", () => {
           const group = button.parentElement.querySelectorAll("button");
