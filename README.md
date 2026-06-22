@@ -4,6 +4,7 @@ A standalone HTML dashboard prototype for managing AI data annotation workflows.
 
 ## Features
 
+- Clickable navigation, cards, queue tabs, role switching, modals, toasts, sample upload flow, and sample CSV export
 - Review queue with pending approvals, rejects, and escalation status
 - Project manager views for progress, workforce productivity, dataset coverage, quality metrics, and review queue status
 - Quality comparison panels for model output versus human labels

@@ -50,6 +50,15 @@
         cursor: pointer;
       }
 
+      button:focus-visible,
+      input:focus-visible,
+      select:focus-visible,
+      textarea:focus-visible,
+      .clickable:focus-visible {
+        outline: 3px solid rgba(36, 107, 254, 0.24);
+        outline-offset: 2px;
+      }
+
       .app {
         min-height: 100vh;
         display: grid;
@@ -231,6 +240,22 @@
         padding: 16px;
         box-shadow: var(--shadow);
         min-height: 116px;
+        transition:
+          border-color 160ms ease,
+          transform 160ms ease,
+          box-shadow 160ms ease;
+      }
+
+      .metric.clickable:hover,
+      .manager-card.clickable:hover,
+      .review-feature.clickable:hover,
+      .step.clickable:hover,
+      .review-row.clickable:hover,
+      .table-row.clickable:hover,
+      .label-chip.clickable:hover {
+        border-color: rgba(36, 107, 254, 0.55);
+        box-shadow: 0 16px 34px rgba(24, 35, 52, 0.11);
+        transform: translateY(-1px);
       }
 
       .metric .label {
@@ -324,6 +349,13 @@
         min-height: 74px;
         padding: 12px 16px;
         border-bottom: 1px solid var(--line);
+        transition:
+          background 160ms ease,
+          border-color 160ms ease;
+      }
+
+      .review-row.clickable:hover {
+        background: #fbfdff;
       }
 
       .review-row:last-child {
@@ -413,6 +445,7 @@
       mark {
         border-radius: 5px;
         padding: 2px 4px;
+        cursor: pointer;
       }
 
       .entity-person {
@@ -480,6 +513,13 @@
         align-items: center;
         gap: 7px;
         font-size: 13px;
+      }
+
+      .label-chip.active {
+        border-color: var(--blue);
+        background: var(--blue-soft);
+        color: #2158ce;
+        font-weight: 750;
       }
 
       .dot {
@@ -571,6 +611,12 @@
         place-items: center;
         text-align: center;
         padding: 18px;
+        cursor: pointer;
+      }
+
+      .upload-box:hover {
+        border-color: var(--blue);
+        background: #f7fbff;
       }
 
       .upload-box strong {
@@ -652,6 +698,10 @@
         display: grid;
         align-content: space-between;
         gap: 16px;
+        transition:
+          border-color 160ms ease,
+          box-shadow 160ms ease,
+          transform 160ms ease;
       }
 
       .manager-card:last-child {
@@ -770,6 +820,10 @@
         display: grid;
         align-content: space-between;
         gap: 14px;
+        transition:
+          border-color 160ms ease,
+          box-shadow 160ms ease,
+          transform 160ms ease;
       }
 
       .review-feature:last-child {
@@ -797,6 +851,108 @@
         display: flex;
         justify-content: space-between;
         gap: 10px;
+      }
+
+      .hidden {
+        display: none !important;
+      }
+
+      .clickable {
+        cursor: pointer;
+      }
+
+      .modal-backdrop {
+        position: fixed;
+        inset: 0;
+        z-index: 30;
+        background: rgba(12, 18, 28, 0.42);
+        display: grid;
+        place-items: center;
+        padding: 20px;
+      }
+
+      .modal {
+        width: min(580px, 100%);
+        background: #ffffff;
+        border-radius: 8px;
+        border: 1px solid var(--line);
+        box-shadow: 0 24px 60px rgba(10, 16, 28, 0.24);
+        overflow: hidden;
+      }
+
+      .modal-head,
+      .modal-foot {
+        min-height: 58px;
+        padding: 14px 16px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        border-bottom: 1px solid var(--line);
+      }
+
+      .modal-foot {
+        border-top: 1px solid var(--line);
+        border-bottom: 0;
+        justify-content: flex-end;
+      }
+
+      .modal h2 {
+        margin: 0;
+        font-size: 17px;
+      }
+
+      .modal-body {
+        padding: 16px;
+        display: grid;
+        gap: 12px;
+      }
+
+      .modal-body p {
+        margin: 0;
+        color: var(--muted);
+        line-height: 1.5;
+      }
+
+      .detail-grid {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 10px;
+      }
+
+      .detail-cell {
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        padding: 10px;
+        display: grid;
+        gap: 6px;
+      }
+
+      .detail-cell span {
+        color: var(--muted);
+        font-size: 12px;
+      }
+
+      .toast {
+        position: fixed;
+        right: 18px;
+        bottom: 18px;
+        z-index: 40;
+        min-height: 44px;
+        max-width: min(380px, calc(100vw - 36px));
+        border-radius: 8px;
+        background: #17202a;
+        color: #ffffff;
+        box-shadow: 0 18px 40px rgba(10, 16, 28, 0.22);
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 0 14px;
+        font-size: 14px;
+      }
+
+      .toast svg {
+        color: #38bdf8;
       }
 
       @media (max-width: 1080px) {
@@ -901,32 +1057,32 @@
         </div>
 
         <nav class="nav">
-          <button class="active" type="button">
+          <button class="active" type="button" data-nav="dashboard">
             <i data-lucide="layout-dashboard"></i>
             Dashboard
             <span class="count">12</span>
           </button>
-          <button type="button">
+          <button type="button" data-nav="datasets">
             <i data-lucide="file-up"></i>
             Datasets
             <span class="count">4</span>
           </button>
-          <button type="button">
+          <button type="button" data-nav="labels">
             <i data-lucide="tags"></i>
             Labels
             <span class="count">18</span>
           </button>
-          <button type="button">
+          <button type="button" data-nav="annotate">
             <i data-lucide="mouse-pointer-square"></i>
             Annotate
             <span class="count">86</span>
           </button>
-          <button type="button">
+          <button type="button" data-nav="reviewers">
             <i data-lucide="users"></i>
             Reviewers
             <span class="count">7</span>
           </button>
-          <button type="button">
+          <button type="button" data-nav="exports">
             <i data-lucide="download"></i>
             Exports
             <span class="count">3</span>
@@ -945,16 +1101,16 @@
             <p>Dataset intake, labeling, reviewer QA, consensus, corrections, and export in one workspace.</p>
           </div>
           <div class="actions">
-            <button class="icon-btn" type="button" title="Search"><i data-lucide="search"></i></button>
-            <button class="ghost-btn" type="button"><i data-lucide="filter"></i> Filters</button>
-            <button class="ghost-btn" type="button"><i data-lucide="download"></i> Export</button>
-            <button class="primary-btn" type="button"><i data-lucide="plus"></i> New Batch</button>
+            <button class="icon-btn" type="button" title="Search" data-action="search"><i data-lucide="search"></i></button>
+            <button class="ghost-btn" type="button" data-action="filters"><i data-lucide="filter"></i> Filters</button>
+            <button class="ghost-btn" type="button" data-action="export"><i data-lucide="download"></i> Export</button>
+            <button class="primary-btn" type="button" data-action="new-batch"><i data-lucide="plus"></i> New Batch</button>
           </div>
         </header>
 
-        <section class="content">
+        <section class="content" id="dashboard">
           <div class="metrics" aria-label="Project metrics">
-            <article class="metric">
+            <article class="metric clickable" tabindex="0" data-detail="Pending Reviews|128 items are waiting on reviewer action. 24 are due today, and 5 are escalated.|Open queue|Due today|24|Escalated|5|Oldest item|18h">
               <div class="label">
                 <span>Pending Reviews</span>
                 <i data-lucide="clock-3"></i>
@@ -962,7 +1118,7 @@
               <strong>128</strong>
               <span>24 due today</span>
             </article>
-            <article class="metric">
+            <article class="metric clickable" tabindex="0" data-detail="Consensus Score|Agreement is trending up after label examples were tightened this week.|View consensus|Current score|91%|Weekly change|+4%|Adjudications|17">
               <div class="label">
                 <span>Consensus Score</span>
                 <i data-lucide="badge-check"></i>
@@ -970,7 +1126,7 @@
               <strong>91%</strong>
               <span>+4% this week</span>
             </article>
-            <article class="metric">
+            <article class="metric clickable" tabindex="0" data-detail="Correction Rate|Most corrections are coming from overlapping organization spans and unclear risk-clause boundaries.|Review errors|Correction rate|6.8%|Top issue|Span overlap|Affected records|42">
               <div class="label">
                 <span>Correction Rate</span>
                 <i data-lucide="triangle-alert"></i>
@@ -978,7 +1134,7 @@
               <strong>6.8%</strong>
               <span style="color: var(--orange)">Needs label review</span>
             </article>
-            <article class="metric">
+            <article class="metric clickable" tabindex="0" data-detail="Export Ready|Approved records are available as training JSONL, QA CSV, and correction audit exports.|Generate export|Ready records|3,420|Formats|JSONL CSV|Last build|12m ago">
               <div class="label">
                 <span>Export Ready</span>
                 <i data-lucide="package-check"></i>
@@ -988,20 +1144,20 @@
             </article>
           </div>
 
-          <section class="panel role-dashboard">
+          <section class="panel role-dashboard" id="reviewers">
             <div class="panel-head">
               <div>
                 <h2>Role Dashboard Views</h2>
                 <p>Project managers track progress and staffing; reviewers focus on queues, quality, errors, consensus, and corrections.</p>
               </div>
               <div class="role-tabs" aria-label="Role views">
-                <button class="active" type="button"><i data-lucide="briefcase-business"></i> Project Managers</button>
-                <button type="button"><i data-lucide="clipboard-check"></i> Reviewers</button>
+                <button class="active" type="button" data-role="manager"><i data-lucide="briefcase-business"></i> Project Managers</button>
+                <button type="button" data-role="reviewer"><i data-lucide="clipboard-check"></i> Reviewers</button>
               </div>
             </div>
 
             <div class="manager-grid" aria-label="Project manager dashboard views">
-              <article class="manager-card">
+              <article class="manager-card clickable" tabindex="0" data-detail="Project Progress|Completed records, blocked batches, due dates, and release readiness roll up here.|Open progress|Completion|74%|Blocked batches|3|Ready records|3,420">
                 <div>
                   <h3>Project Progress</h3>
                   <p>Tracks completed records, blocked batches, due dates, and release readiness.</p>
@@ -1013,7 +1169,7 @@
                 </div>
               </article>
 
-              <article class="manager-card">
+              <article class="manager-card clickable" tabindex="0" data-detail="Workforce Productivity|Throughput by annotator and reviewer helps managers balance assignments before deadlines slip.|Balance workload|Top reviewer|Maya|Records today|412|At-risk owner|Nia">
                 <div>
                   <h3>Workforce Productivity</h3>
                   <p>Measures throughput by annotator and reviewer so managers can balance assignments.</p>
@@ -1025,7 +1181,7 @@
                 </div>
               </article>
 
-              <article class="manager-card">
+              <article class="manager-card clickable" tabindex="0" data-detail="Dataset Coverage|Coverage heatmaps expose low coverage classes, split imbalance, and records that still need labels.|View coverage|Low class|Risk Clause|Train split|82%|Needs labels|640">
                 <div>
                   <h3>Dataset Coverage</h3>
                   <p>Identifies low coverage classes, split imbalance, and records that still need labels.</p>
@@ -1037,7 +1193,7 @@
                 </div>
               </article>
 
-              <article class="manager-card">
+              <article class="manager-card clickable" tabindex="0" data-detail="Quality Metrics|Agreement, correction rate, rejection rate, and label-definition drift are monitored before release.|Open quality|Agreement|91%|Correction|6.8%|Reject|1.7%">
                 <div>
                   <h3>Quality Metrics</h3>
                   <p>Monitors agreement, correction rate, rejection rate, and label-definition drift.</p>
@@ -1049,7 +1205,7 @@
                 </div>
               </article>
 
-              <article class="manager-card">
+              <article class="manager-card clickable" tabindex="0" data-detail="Review Queue Status|Pending volume, conflict age, overdue items, and escalation risk are visible from the manager view.|Open status|Pending|128|Conflicts|17|Ready|3,420">
                 <div>
                   <h3>Review Queue Status</h3>
                   <p>Tracks pending review volume, conflict age, overdue items, and escalation risk.</p>
@@ -1063,7 +1219,7 @@
             </div>
           </section>
 
-          <section class="panel">
+          <section class="panel" id="reviewer-tools">
             <div class="panel-head">
               <div>
                 <h2>Reviewer Dashboard Views</h2>
@@ -1072,7 +1228,7 @@
               <span class="badge blue">Reviewer Tools</span>
             </div>
             <div class="review-feature-grid" aria-label="Reviewer dashboard views">
-              <article class="review-feature">
+              <article class="review-feature clickable" tabindex="0" data-detail="Pending Reviews|Assigned items are sorted by due time, priority, reviewer, and conflict status.|Open pending|Due today|24|Escalated|5|Owner|Maya">
                 <span class="feature-icon"><i data-lucide="inbox"></i></span>
                 <div>
                   <h3>Pending Reviews</h3>
@@ -1084,7 +1240,7 @@
                 </div>
               </article>
 
-              <article class="review-feature">
+              <article class="review-feature clickable" tabindex="0" data-detail="Quality Comparison|Model output, annotator labels, and reviewer corrections can be compared side by side.|Compare labels|Model agreement|87%|Human agreement|91%|Corrections|18">
                 <span class="feature-icon"><i data-lucide="git-compare-arrows"></i></span>
                 <div>
                   <h3>Quality Comparison</h3>
@@ -1096,7 +1252,7 @@
                 </div>
               </article>
 
-              <article class="review-feature">
+              <article class="review-feature clickable" tabindex="0" data-detail="Error Tracking|Recurring mistakes are grouped by label, source, annotator, and batch.|Open errors|Span overlap|42|Wrong label|31|Missing label|19">
                 <span class="feature-icon"><i data-lucide="bug"></i></span>
                 <div>
                   <h3>Error Tracking</h3>
@@ -1108,7 +1264,7 @@
                 </div>
               </article>
 
-              <article class="review-feature">
+              <article class="review-feature clickable" tabindex="0" data-detail="Consensus Scores|Reviewer agreement controls whether batches move to approved export or adjudication.|Open consensus|2 of 3 pass|86%|Needs adjudication|17|Threshold|2 of 3">
                 <span class="feature-icon"><i data-lucide="badge-check"></i></span>
                 <div>
                   <h3>Consensus Scores</h3>
@@ -1120,7 +1276,7 @@
                 </div>
               </article>
 
-              <article class="review-feature">
+              <article class="review-feature clickable" tabindex="0" data-detail="Rejection / Correction Logs|Rejected records, correction notes, reviewer decisions, and audit history stay attached to each item.|Open logs|Corrections|212|Rejected|39|Rule changes|2">
                 <span class="feature-icon"><i data-lucide="file-clock"></i></span>
                 <div>
                   <h3>Rejection / Correction Logs</h3>
@@ -1142,39 +1298,71 @@
                   <p>Dashboard view for pending reviews, quality comparison, errors, consensus, and corrections.</p>
                 </div>
                 <div class="segmented" aria-label="Review queue tabs">
-                  <button class="active" type="button">Queue</button>
-                  <button type="button">QA</button>
-                  <button type="button">Logs</button>
-                </div>
+                <button class="active" type="button" data-tab="queue">Queue</button>
+                <button type="button" data-tab="qa">QA</button>
+                <button type="button" data-tab="logs">Logs</button>
               </div>
+            </div>
 
-              <div class="review-list">
-                <div class="review-row">
+              <div class="review-list" data-tab-panel="queue">
+                <div class="review-row clickable" tabindex="0" data-detail="Batch 24-A: contract parties|42 records are assigned to Maya and due at 3:00 PM. Open starts the annotation review flow.|Open batch|Records|42|Owner|Maya|Progress|72%">
                   <div>
                     <div class="item-title">Batch 24-A: contract parties</div>
                     <div class="item-meta">42 records · assigned to Maya · due 3:00 PM</div>
                   </div>
                   <span class="badge orange">Review</span>
                   <div class="progress" aria-label="72 percent complete"><span style="width: 72%"></span></div>
-                  <button class="ghost-btn" type="button">Open</button>
+                  <button class="ghost-btn" type="button" data-action="open-batch">Open</button>
                 </div>
-                <div class="review-row">
+                <div class="review-row clickable" tabindex="0" data-detail="Batch 24-B: adverse clauses|31 records have 5 conflicts and need adjudication before export readiness.|Open batch|Records|31|Conflicts|5|Progress|44%">
                   <div>
                     <div class="item-title">Batch 24-B: adverse clauses</div>
                     <div class="item-meta">31 records · assigned to Leon · 5 conflicts</div>
                   </div>
                   <span class="badge red">Conflict</span>
                   <div class="progress" aria-label="44 percent complete"><span style="width: 44%"></span></div>
-                  <button class="ghost-btn" type="button">Open</button>
+                  <button class="ghost-btn" type="button" data-action="open-batch">Open</button>
                 </div>
-                <div class="review-row">
+                <div class="review-row clickable" tabindex="0" data-detail="Batch 23-F: organization names|86 records passed consensus and can be included in the approved export.|Open batch|Records|86|Status|Approved|Progress|100%">
                   <div>
                     <div class="item-title">Batch 23-F: organization names</div>
                     <div class="item-meta">86 records · consensus pass · ready for export</div>
                   </div>
                   <span class="badge green">Approved</span>
                   <div class="progress" aria-label="100 percent complete"><span style="width: 100%"></span></div>
-                  <button class="ghost-btn" type="button">Open</button>
+                  <button class="ghost-btn" type="button" data-action="open-batch">Open</button>
+                </div>
+              </div>
+              <div class="quality hidden" data-tab-panel="qa">
+                <div class="compare">
+                  <div class="compare-row">
+                    <span>Model</span>
+                    <div class="progress"><span style="width: 87%"></span></div>
+                    <strong>87%</strong>
+                  </div>
+                  <div class="compare-row">
+                    <span>Annotator</span>
+                    <div class="progress"><span style="width: 91%"></span></div>
+                    <strong>91%</strong>
+                  </div>
+                  <div class="compare-row">
+                    <span>Reviewer</span>
+                    <div class="progress"><span style="width: 96%"></span></div>
+                    <strong>96%</strong>
+                  </div>
+                </div>
+                <button class="ghost-btn" type="button" data-action="compare">Open Comparison</button>
+              </div>
+              <div class="quality hidden" data-tab-panel="logs">
+                <div class="log-list">
+                  <div class="log clickable" tabindex="0" data-detail="Correction Log|18 corrections were applied to Batch 24-A, mostly clarifying organization boundaries.|View audit|Corrections|18|Reviewer|Ari|Last update|9m ago">
+                    <strong>Batch 24-A correction log</strong>
+                    <span>18 corrections, 2 reviewer comments, 1 guideline note.</span>
+                  </div>
+                  <div class="log clickable" tabindex="0" data-detail="Rejection Log|4 records were rejected because the source document was incomplete or duplicated.|View audit|Rejected|4|Duplicates|2|Incomplete|2">
+                    <strong>Batch 24-B rejection log</strong>
+                    <span>4 rejected records, 5 conflict notes, 2 escalations.</span>
+                  </div>
                 </div>
               </div>
             </section>
@@ -1219,24 +1407,24 @@
             </section>
           </div>
 
-          <section class="panel">
+          <section class="panel" id="annotate">
             <div class="panel-head">
               <div>
                 <h2>Annotation Interface</h2>
                 <p>Core workspace for applying labels, comments, reviewer decisions, and consensus outcomes.</p>
               </div>
               <div class="actions">
-                <button class="ghost-btn" type="button"><i data-lucide="undo-2"></i> Undo</button>
-                <button class="primary-btn" type="button"><i data-lucide="check"></i> Submit</button>
+                <button class="ghost-btn" type="button" data-action="undo"><i data-lucide="undo-2"></i> Undo</button>
+                <button class="primary-btn" type="button" data-action="submit-review"><i data-lucide="check"></i> Submit</button>
               </div>
             </div>
             <div class="annotation-shell">
               <div class="document">
                 <div class="sample-text">
                   <p>
-                    <mark class="entity-person">Jordan Kim</mark> signed the services agreement on behalf of
-                    <mark class="entity-org">Northstar Analytics LLC</mark>. The reviewer flagged a
-                    <mark class="entity-risk">missing limitation of liability clause</mark> for correction before export.
+                    <mark class="entity-person" data-detail="Entity Span: Jordan Kim|Current label is Person. Click Apply Label to simulate changing the selected span.|Apply Label|Current label|Person|Confidence|96%|Reviewer|Maya">Jordan Kim</mark> signed the services agreement on behalf of
+                    <mark class="entity-org" data-detail="Entity Span: Northstar Analytics LLC|Current label is Organization. Reviewer note asks whether this is the contracting entity.|Apply Label|Current label|Organization|Confidence|89%|Reviewer|Leon">Northstar Analytics LLC</mark>. The reviewer flagged a
+                    <mark class="entity-risk" data-detail="Entity Span: missing limitation of liability clause|Current label is Risk Clause. This is the top correction pattern in the current batch.|Apply Label|Current label|Risk Clause|Confidence|82%|Corrections|7">missing limitation of liability clause</mark> for correction before export.
                   </p>
                   <p>
                     Consensus requires two reviewers to agree on each span. Disagreements move into the pending review queue
@@ -1255,10 +1443,10 @@
                   </select>
                 </div>
                 <div class="labels" aria-label="Available labels">
-                  <span class="label-chip"><span class="dot" style="background:#f4b942"></span> Person</span>
-                  <span class="label-chip"><span class="dot" style="background:#4aa3ff"></span> Organization</span>
-                  <span class="label-chip"><span class="dot" style="background:#ff6f6f"></span> Risk</span>
-                  <span class="label-chip"><span class="dot" style="background:#158466"></span> Date</span>
+                  <span class="label-chip clickable active" tabindex="0" data-label="Person"><span class="dot" style="background:#f4b942"></span> Person</span>
+                  <span class="label-chip clickable" tabindex="0" data-label="Organization"><span class="dot" style="background:#4aa3ff"></span> Organization</span>
+                  <span class="label-chip clickable" tabindex="0" data-label="Risk Clause"><span class="dot" style="background:#ff6f6f"></span> Risk</span>
+                  <span class="label-chip clickable" tabindex="0" data-label="Date"><span class="dot" style="background:#158466"></span> Date</span>
                 </div>
                 <div class="field">
                   <label for="decision">Review Workflow</label>
@@ -1286,35 +1474,35 @@
                 </div>
               </div>
               <div class="workflow">
-                <div class="step">
+                <div class="step clickable" tabindex="0" data-jump="datasets">
                   <i data-lucide="file-up"></i>
                   <div>
                     <strong>Dataset Upload</strong>
                     <span>Import CSV, JSONL, image, text, or PDF batches.</span>
                   </div>
                 </div>
-                <div class="step">
+                <div class="step clickable" tabindex="0" data-jump="labels">
                   <i data-lucide="tags"></i>
                   <div>
                     <strong>Label Configuration</strong>
                     <span>Define labels, colors, rules, and examples.</span>
                   </div>
                 </div>
-                <div class="step">
+                <div class="step clickable" tabindex="0" data-jump="annotate">
                   <i data-lucide="mouse-pointer-square"></i>
                   <div>
                     <strong>Annotation Interface</strong>
                     <span>Apply spans, classes, notes, and flags.</span>
                   </div>
                 </div>
-                <div class="step">
+                <div class="step clickable" tabindex="0" data-jump="reviewers">
                   <i data-lucide="users"></i>
                   <div>
                     <strong>User Management</strong>
                     <span>Assign work by role, reviewer, and deadline.</span>
                   </div>
                 </div>
-                <div class="step">
+                <div class="step clickable" tabindex="0" data-jump="dashboard">
                   <i data-lucide="bar-chart-3"></i>
                   <div>
                     <strong>Progress Tracking</strong>
@@ -1324,32 +1512,32 @@
               </div>
             </section>
 
-            <section class="panel">
+            <section class="panel" id="datasets">
               <div class="panel-head">
                 <div>
                   <h2>Dataset Upload</h2>
                   <p>Ready for data import and export generation.</p>
                 </div>
               </div>
-              <div class="upload-box">
+              <div class="upload-box" tabindex="0" data-action="upload">
                 <div>
                   <i data-lucide="upload-cloud"></i>
                   <strong>Drop dataset files here</strong>
                   <span>CSV, JSONL, images, PDFs, or plain text</span>
                 </div>
               </div>
-              <div class="table">
+              <div class="table" id="exports">
                 <div class="table-row head">
                   <span>Export</span>
                   <span>Status</span>
                   <span>Records</span>
                 </div>
-                <div class="table-row">
+                <div class="table-row clickable" tabindex="0" data-action="export">
                   <span>training-set-approved.jsonl</span>
                   <span><span class="badge green">Ready</span></span>
                   <span>3,420</span>
                 </div>
-                <div class="table-row">
+                <div class="table-row clickable" tabindex="0" data-detail="corrections-audit.csv|This export is queued and will include correction notes, reviewer IDs, timestamps, and rejected record reasons.|Build now|Status|Queued|Records|212|Format|CSV">
                   <span>corrections-audit.csv</span>
                   <span><span class="badge blue">Queued</span></span>
                   <span>212</span>
@@ -1361,19 +1549,318 @@
       </main>
     </div>
 
+    <div class="modal-backdrop hidden" id="modalBackdrop" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+      <div class="modal">
+        <div class="modal-head">
+          <h2 id="modalTitle">Prototype Detail</h2>
+          <button class="icon-btn" type="button" data-action="close-modal" title="Close"><i data-lucide="x"></i></button>
+        </div>
+        <div class="modal-body" id="modalBody"></div>
+        <div class="modal-foot">
+          <button class="ghost-btn" type="button" data-action="close-modal">Cancel</button>
+          <button class="primary-btn" type="button" id="modalPrimary">Continue</button>
+        </div>
+      </div>
+    </div>
+    <div class="toast hidden" id="toast" role="status" aria-live="polite">
+      <i data-lucide="circle-check"></i>
+      <span id="toastText">Updated</span>
+    </div>
+
     <script>
-      const buttons = document.querySelectorAll(".nav button, .segmented button, .role-tabs button");
-      buttons.forEach((button) => {
-        button.addEventListener("click", () => {
-          const group = button.parentElement.querySelectorAll("button");
-          group.forEach((item) => item.classList.remove("active"));
-          button.classList.add("active");
+      const navMeta = {
+        dashboard: {
+          title: "AI Annotation Dashboard",
+          text: "Dataset intake, labeling, reviewer QA, consensus, corrections, and export in one workspace.",
+          target: "dashboard",
+        },
+        datasets: {
+          title: "Datasets",
+          text: "Upload batches, validate schemas, monitor import status, and prepare training exports.",
+          target: "datasets",
+        },
+        labels: {
+          title: "Labels",
+          text: "Configure entity labels, class rules, examples, reviewer guidance, and quality thresholds.",
+          target: "annotate",
+        },
+        annotate: {
+          title: "Annotation Workbench",
+          text: "Apply labels, inspect model suggestions, add correction notes, and submit review decisions.",
+          target: "annotate",
+        },
+        reviewers: {
+          title: "Reviewer Management",
+          text: "Track role dashboards, reviewer productivity, conflict queues, and audit history.",
+          target: "reviewers",
+        },
+        exports: {
+          title: "Exports",
+          text: "Generate approved datasets, correction audits, and review artifacts.",
+          target: "exports",
+        },
+      };
+
+      const modal = document.getElementById("modalBackdrop");
+      const modalTitle = document.getElementById("modalTitle");
+      const modalBody = document.getElementById("modalBody");
+      const modalPrimary = document.getElementById("modalPrimary");
+      const toast = document.getElementById("toast");
+      const toastText = document.getElementById("toastText");
+      let toastTimer;
+
+      function refreshIcons() {
+        if (window.lucide) {
+          window.lucide.createIcons({ attrs: { width: 18, height: 18, "stroke-width": 2 } });
+        }
+      }
+
+      function showToast(message) {
+        toastText.textContent = message;
+        toast.classList.remove("hidden");
+        window.clearTimeout(toastTimer);
+        toastTimer = window.setTimeout(() => toast.classList.add("hidden"), 2600);
+      }
+
+      function closeModal() {
+        modal.classList.add("hidden");
+      }
+
+      function showModal(title, description, action, stats = []) {
+        modalTitle.textContent = title;
+        modalBody.innerHTML = "";
+        const copy = document.createElement("p");
+        copy.textContent = description;
+        modalBody.append(copy);
+
+        if (stats.length) {
+          const grid = document.createElement("div");
+          grid.className = "detail-grid";
+          for (let index = 0; index < stats.length; index += 2) {
+            const cell = document.createElement("div");
+            cell.className = "detail-cell";
+            cell.innerHTML = `<span>${stats[index]}</span><strong>${stats[index + 1] ?? ""}</strong>`;
+            grid.append(cell);
+          }
+          modalBody.append(grid);
+        }
+
+        modalPrimary.textContent = action || "Continue";
+        modalPrimary.onclick = () => {
+          closeModal();
+          showToast(`${title}: ${modalPrimary.textContent} selected`);
+        };
+        modal.classList.remove("hidden");
+        refreshIcons();
+      }
+
+      function detailFromDataset(value) {
+        const parts = value.split("|");
+        return {
+          title: parts[0],
+          description: parts[1] || "",
+          action: parts[2] || "Continue",
+          stats: parts.slice(3),
+        };
+      }
+
+      function activateNav(key) {
+        const meta = navMeta[key];
+        if (!meta) return;
+        document.querySelectorAll(".nav button").forEach((button) => {
+          button.classList.toggle("active", button.dataset.nav === key);
+        });
+        document.querySelector(".title h1").textContent = meta.title;
+        document.querySelector(".title p").textContent = meta.text;
+        const target = document.getElementById(meta.target);
+        if (target) {
+          target.scrollIntoView({ behavior: "smooth", block: key === "dashboard" ? "start" : "center" });
+        }
+      }
+
+      function setRole(role) {
+        document.querySelectorAll(".role-tabs button").forEach((button) => {
+          button.classList.toggle("active", button.dataset.role === role);
+        });
+        const managerGrid = document.querySelector(".manager-grid");
+        const reviewerTools = document.getElementById("reviewer-tools");
+        managerGrid.classList.toggle("hidden", role !== "manager");
+        reviewerTools.classList.toggle("hidden", role !== "reviewer");
+        showToast(role === "manager" ? "Project manager view selected" : "Reviewer view selected");
+      }
+
+      function setWorkbenchTab(tab) {
+        document.querySelectorAll(".segmented button").forEach((button) => {
+          button.classList.toggle("active", button.dataset.tab === tab);
+        });
+        document.querySelectorAll("[data-tab-panel]").forEach((panel) => {
+          panel.classList.toggle("hidden", panel.dataset.tabPanel !== tab);
+        });
+      }
+
+      function downloadExport() {
+        const rows = [
+          "id,text,label,review_status,consensus",
+          "24A-001,Jordan Kim,Person,approved,2_of_3",
+          "24A-002,Northstar Analytics LLC,Organization,approved,3_of_3",
+          "24B-014,missing limitation of liability clause,Risk Clause,correction_requested,1_of_3",
+        ];
+        const blob = new Blob([rows.join("\n")], { type: "text/csv" });
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement("a");
+        link.href = url;
+        link.download = "annotation-export-sample.csv";
+        link.click();
+        URL.revokeObjectURL(url);
+        showToast("Sample export generated");
+      }
+
+      function handleAction(action, source) {
+        const actions = {
+          search: () =>
+            showModal("Search", "Search batches, records, labels, reviewers, and correction notes.", "Run Search", [
+              "Indexed records",
+              "24,900",
+              "Saved filters",
+              "6",
+              "Recent result",
+              "Batch 24-A",
+            ]),
+          filters: () =>
+            showModal("Filters", "Filter the dashboard by project, reviewer, label class, due date, and review status.", "Apply Filters", [
+              "Project",
+              "Legal extraction",
+              "Status",
+              "Needs review",
+              "Reviewer",
+              "All",
+            ]),
+          "new-batch": () =>
+            showModal("New Batch", "Create a new annotation batch from an uploaded dataset and assign labeling rules.", "Create Batch", [
+              "Default format",
+              "JSONL",
+              "Consensus",
+              "2 of 3",
+              "Review SLA",
+              "24h",
+            ]),
+          export: downloadExport,
+          upload: () => {
+            const input = document.createElement("input");
+            input.type = "file";
+            input.multiple = true;
+            input.accept = ".csv,.jsonl,.json,.txt,.pdf,image/*";
+            input.onchange = () => showToast(`${input.files.length} file${input.files.length === 1 ? "" : "s"} staged for upload`);
+            input.click();
+          },
+          undo: () => showToast("Last label edit reverted"),
+          "submit-review": () =>
+            showModal("Submit Review", "Submit this record with the selected decision and correction notes.", "Submit Decision", [
+              "Decision",
+              document.getElementById("decision").value,
+              "Selected label",
+              document.getElementById("labelType").value,
+              "Consensus impact",
+              "+1 reviewer",
+            ]),
+          "open-batch": () => {
+            const detail = source.closest("[data-detail]");
+            if (detail) {
+              const data = detailFromDataset(detail.dataset.detail);
+              showModal(data.title, data.description, data.action, data.stats);
+            }
+          },
+          compare: () =>
+            showModal("Quality Comparison", "Review model, annotator, and reviewer outputs side by side before approval.", "Open Side-by-Side", [
+              "Model",
+              "87%",
+              "Annotator",
+              "91%",
+              "Reviewer",
+              "96%",
+            ]),
+          "close-modal": closeModal,
+        };
+        actions[action]?.();
+      }
+
+      document.querySelectorAll(".nav button").forEach((button) => {
+        button.addEventListener("click", () => activateNav(button.dataset.nav));
+      });
+
+      document.querySelectorAll(".role-tabs button").forEach((button) => {
+        button.addEventListener("click", () => setRole(button.dataset.role));
+      });
+
+      document.querySelectorAll(".segmented button").forEach((button) => {
+        button.addEventListener("click", () => setWorkbenchTab(button.dataset.tab));
+      });
+
+      document.querySelectorAll("[data-action]").forEach((element) => {
+        element.addEventListener("click", (event) => {
+          event.stopPropagation();
+          handleAction(element.dataset.action, element);
         });
       });
 
-      if (window.lucide) {
-        window.lucide.createIcons({ attrs: { width: 18, height: 18, "stroke-width": 2 } });
-      }
+      document.querySelectorAll("[data-detail]").forEach((element) => {
+        element.addEventListener("click", () => {
+          const data = detailFromDataset(element.dataset.detail);
+          showModal(data.title, data.description, data.action, data.stats);
+        });
+        element.addEventListener("keydown", (event) => {
+          if (event.key === "Enter" || event.key === " ") {
+            event.preventDefault();
+            element.click();
+          }
+        });
+      });
+
+      document.querySelectorAll("[data-jump]").forEach((element) => {
+        element.addEventListener("click", () => activateNav(element.dataset.jump));
+        element.addEventListener("keydown", (event) => {
+          if (event.key === "Enter" || event.key === " ") {
+            event.preventDefault();
+            activateNav(element.dataset.jump);
+          }
+        });
+      });
+
+      document.querySelectorAll("[data-label]").forEach((chip) => {
+        chip.addEventListener("click", () => {
+          document.querySelectorAll("[data-label]").forEach((item) => item.classList.remove("active"));
+          chip.classList.add("active");
+          document.getElementById("labelType").value = chip.dataset.label;
+          showToast(`${chip.dataset.label} label selected`);
+        });
+        chip.addEventListener("keydown", (event) => {
+          if (event.key === "Enter" || event.key === " ") {
+            event.preventDefault();
+            chip.click();
+          }
+        });
+      });
+
+      document.getElementById("labelType").addEventListener("change", (event) => {
+        document.querySelectorAll("[data-label]").forEach((chip) => {
+          chip.classList.toggle("active", chip.dataset.label === event.target.value);
+        });
+        showToast(`${event.target.value} selected`);
+      });
+
+      document.getElementById("decision").addEventListener("change", (event) => {
+        showToast(`Decision set to: ${event.target.value}`);
+      });
+
+      modal.addEventListener("click", (event) => {
+        if (event.target === modal) closeModal();
+      });
+
+      document.addEventListener("keydown", (event) => {
+        if (event.key === "Escape") closeModal();
+      });
+
+      refreshIcons();
     </script>
   </body>
 </html>
