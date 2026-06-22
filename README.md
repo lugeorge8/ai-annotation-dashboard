@@ -13,6 +13,13 @@ A standalone HTML dashboard prototype for managing AI data annotation workflows.
 - Dataset upload, label configuration, annotation tools, and export status
 - Team and reviewer management views
 
+## Code Map
+
+- `index.html` defines the dashboard structure, visible content, modal shell, toast shell, and `data-*` hooks that make elements clickable.
+- `styles.css` contains the full visual system: layout, panels, buttons, badges, workbench, modal, toast, and responsive rules.
+- `dashboard-data.js` stores navigation titles, subtitles, and scroll targets used by the sidebar.
+- `app.js` connects the page behavior: navigation, role switching, queue tabs, detail modals, sample upload, sample CSV export, and keyboard activation.
+
 ## Run Locally
 
 Open `index.html` directly in a browser, or serve the folder with any static file server.
